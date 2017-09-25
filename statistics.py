@@ -56,8 +56,6 @@ for y, i in enumerate(posts):
         break
     amount += 1
     flair = i.link_flair_css_class
-    if flair == "Worldbuild?":
-        flair = "Conlang"
     upvotes = i.score
     statV[flair] = statV.get(flair, 0) + upvotes
     statA[flair] = statA.get(flair, 0) + 1
