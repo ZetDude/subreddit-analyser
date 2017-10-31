@@ -27,9 +27,12 @@ stat  = {}
 statM = {}
 statS = {}
 links = []
+skip  = 0
+last  = 0
 
+limit = int(input("Limit >>> "))
 print("Fetching posts. This may take a while")
-posts = list(bot.subreddit(subreddit).new(limit=1000))
+posts = list(bot.subreddit(subreddit).new(limit=limit))
 postamount = len(posts)
 print("Posts fetched! {} got".format(postamount))
 amount = 0
@@ -50,12 +53,14 @@ for y, i in enumerate(posts):
     diff = nowfrm - createdfrm
     if diff.total_seconds() < 24*3600:
         print("Post is not older than 24 hours, skipping")
+        skip += 1
         continue
     if diff.total_seconds() > 86400 * days:
         print("Post is older than {} days, ending task".format(days))
         break
     amount += 1
-    flair = i.link_flair_css_class
+    #flair = i.link_flair_css_class
+    flair = i.link_flair_text
     upvotes = i.score
     statV[flair] = statV.get(flair, 0) + upvotes
     statA[flair] = statA.get(flair, 0) + 1
@@ -76,6 +81,7 @@ for key, value in statM.items():
 print(links)
 print("\n+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=\n")
 print("Ran through {} posts of {}, ({} being the goal) with the last one being {} days old".format(amount, subreddit, len(posts), last))
+print("(skipped {} posts)".format(skip))
 print("Average upvotes of the past {} days, categorized by flair type:".format(days))
 longest = 0
 for i in stat:
